@@ -87,18 +87,26 @@ namespace libcmaes
 #ifdef HAVE_DEBUG
     std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
 #endif
-    // one candidate per row.
+    // evaluate candidate fvals in block
+    Rcpp::NumericVector fvals(candidates.cols());
+    
+    if (phenocandidates.size())
+      fvals = _parameters._blockfunc(phenocandidates.col(0).data(),candidates.rows(),candidates.cols());
+    else
+      fvals = _parameters._blockfunc(candidates.col(0).data(),candidates.rows(),candidates.cols());
 
     for (int r=0;r<candidates.cols();r++)
-      {
-	_solutions._candidates.at(r).set_x(candidates.col(r));
-	_solutions._candidates.at(r).set_id(r);
-	if (phenocandidates.size())
+    {
+      _solutions._candidates.at(r).set_x(candidates.col(r));
+      _solutions._candidates.at(r).set_id(r);
+      _solutions._candidates.at(r).set_fvalue(fvals[r]);
+    }    
+	/*if (phenocandidates.size())
 	  _solutions._candidates.at(r).set_fvalue(_func(phenocandidates.col(r).data(),candidates.rows()));
 	else _solutions._candidates.at(r).set_fvalue(_func(candidates.col(r).data(),candidates.rows()));
-	
+	*/
 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
-      }
+
     int nfcalls = candidates.cols();
     
     // evaluation step of uncertainty handling scheme.

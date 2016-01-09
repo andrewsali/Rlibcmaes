@@ -29,7 +29,7 @@
 namespace libcmaes
 {
   // fitness function that returns for blocks
-  typedef std::function<Rcpp::NumericVector (const double*, const int &nm)> BlockFitFunc;
+  typedef std::function<Rcpp::NumericVector (const double*,const int N, const int M)> BlockFitFunc;
 
   /**
    * \brief Parameters for various flavors of the CMA-ES algorithm.
@@ -67,7 +67,7 @@ namespace libcmaes
 		    const int &lambda=-1,
 		    const uint64_t &seed=0,
 		    const TGenoPheno &gp=TGenoPheno(),
-        const BlockFitFunc &blockfun=[](const double*, const int &nm){return 0;});
+        const BlockFitFunc &blockfun=[](const double*,const int N, const int M){return 0;});
       
       /**
        * \brief Constructor.
@@ -326,6 +326,7 @@ namespace libcmaes
       bool _initial_elitist = false; /**< re-inject x0. */
       bool _initial_elitist_on_restart = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
       
+      BlockFitFunc _blockfunc;
       // stopping criteria
       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
     };

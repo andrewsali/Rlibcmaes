@@ -33,7 +33,7 @@ namespace libcmaes
 					   const uint64_t &seed,
 					   const TGenoPheno &gp,             
              const BlockFitFunc &blockfun)
-    :Parameters<TGenoPheno>(dim,x0,lambda,seed,gp),_sigma_init(sigma),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0)
+    :Parameters<TGenoPheno>(dim,x0,lambda,seed,gp),_sigma_init(sigma),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0),_blockfunc(blockfun)
   {
     initialize_parameters();
   }
