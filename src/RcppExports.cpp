@@ -6,6 +6,22 @@
 
 using namespace Rcpp;
 
+// cmaesOptim
+NumericVector cmaesOptim(const NumericVector x0, const NumericVector sigma, Function optimFun, NumericVector lowerB, NumericVector upperB, int maxevals);
+RcppExport SEXP Rlibcmaes_cmaesOptim(SEXP x0SEXP, SEXP sigmaSEXP, SEXP optimFunSEXP, SEXP lowerBSEXP, SEXP upperBSEXP, SEXP maxevalsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const NumericVector >::type x0(x0SEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< Function >::type optimFun(optimFunSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lowerB(lowerBSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type upperB(upperBSEXP);
+    Rcpp::traits::input_parameter< int >::type maxevals(maxevalsSEXP);
+    __result = Rcpp::wrap(cmaesOptim(x0, sigma, optimFun, lowerB, upperB, maxevals));
+    return __result;
+END_RCPP
+}
 // rcpp_hello_world
 List rcpp_hello_world();
 RcppExport SEXP Rlibcmaes_rcpp_hello_world() {

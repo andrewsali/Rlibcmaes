@@ -30,6 +30,7 @@
 namespace libcmaes
 {
   typedef std::function<double (const double*, const int &n)> FitFunc;
+
   typedef std::function<dVec (const double*, const int &n)> GradFunc;
 
   typedef std::function<void(const dMat&, const dMat&)> EvalFunc;

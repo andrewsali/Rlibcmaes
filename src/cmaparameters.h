@@ -28,6 +28,9 @@
 
 namespace libcmaes
 {
+  // fitness function that returns for blocks
+  typedef std::function<Rcpp::NumericVector (const double*, const int &nm)> BlockFitFunc;
+
   /**
    * \brief Parameters for various flavors of the CMA-ES algorithm.
    */
@@ -63,7 +66,8 @@ namespace libcmaes
 		    const double &sigma,
 		    const int &lambda=-1,
 		    const uint64_t &seed=0,
-		    const TGenoPheno &gp=TGenoPheno());
+		    const TGenoPheno &gp=TGenoPheno(),
+        const BlockFitFunc &blockfun=[](const double*, const int &nm){return 0;});
       
       /**
        * \brief Constructor.
@@ -141,7 +145,7 @@ namespace libcmaes
 	std::map<std::string,int>::const_iterator mit;
 	if ((mit = Parameters<TGenoPheno>::_algos.find(algo))!=Parameters<TGenoPheno>::_algos.end())
 	  Parameters<TGenoPheno>::_algo = (*mit).second;
-	else LOG(ERROR) << "unknown algorithm " << algo << std::endl;
+	else LOG(ERRORcma) << "unknown algorithm " << algo << std::endl;
 	if (algo.find("sep")!=std::string::npos)
 	  set_sep();
 	if (algo.find("vd")!=std::string::npos)

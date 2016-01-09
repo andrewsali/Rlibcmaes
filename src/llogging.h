@@ -30,7 +30,7 @@ namespace libcmaes
 {
   static std::string INFO="INFO";
   static std::string WARNING="WARNING";
-  static std::string ERROR="ERROR";
+  static std::string ERRORcma="ERROR";
   static std::string FATAL="FATAL";
 
   static std::ostream nullstream(0);

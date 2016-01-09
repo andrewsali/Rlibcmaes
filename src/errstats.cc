@@ -93,7 +93,7 @@ namespace libcmaes
 	CMASolutions ncitsol = errstats<TGenoPheno>::optimize_pk(func,parameters,citsol,k,x[k],x,false,false);
 	if (ncitsol._run_status < 0)
 	  {
-	    LOG(ERROR) << "profile likelihood linesearch: optimization error " << ncitsol._run_status << " -- " << ncitsol.status_msg() << std::endl;
+	    LOG(ERRORcma) << "profile likelihood linesearch: optimization error " << ncitsol._run_status << " -- " << ncitsol.status_msg() << std::endl;
 	    // pad and return.
 	    for (int j=0;j<samplesize;j++)
 	      {
@@ -105,7 +105,7 @@ namespace libcmaes
 	  }
 	else if (ncitsol.best_candidate().get_fvalue() < 1e-1*minfvalue)
 	  {
-	    LOG(ERROR) << "profile likelihood finds new minimum: " << ncitsol.best_candidate().get_fvalue() << std::endl;
+	    LOG(ERRORcma) << "profile likelihood finds new minimum: " << ncitsol.best_candidate().get_fvalue() << std::endl;
 	    // pad and return.
 	    for (int j=0;j<samplesize;j++)
 	      {
