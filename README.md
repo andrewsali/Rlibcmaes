@@ -6,6 +6,10 @@ For expensive objective functions, parallel evaluations is made available by spe
 
 All of the libcmaes CMA algorithms are available for selection, as well as population size control & termination based on maximum function evaluations / x-convergence / function-convergence.
 
+Available algorithms are listed in: https://github.com/andrewsali/Rlibcmaes/blob/master/R/cmaEsAlgo.R
+
+Default parameter values are given in: https://github.com/andrewsali/Rlibcmaes/blob/master/R/cmaEsParams.R
+
 # Installation
 
 The libcmaes library requires C++11, therefore currently the package only works under UNIX variants. This will change with R 3.3., which is going to use gcc 4.9+. The package has been tested under experimental Windows builds, so it is highly likely that it will be available for Windows platforms in the near future.
