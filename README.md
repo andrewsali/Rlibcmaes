@@ -1,10 +1,14 @@
 # Rlibcmaes
 
-This is a lightweight R wrapper on the libcmaes C++ library (https://github.com/beniz/libcmaes/). Currently it supports box-constrained optimization only.
+This is a lightweight R wrapper on the libcmaes C++ library (https://github.com/beniz/libcmaes/). Currently it supports box-constrained optimization only. The aim  is to have a simple & familiar R optimization interface that suffices for most applications, with the ability to tune the parameters of the algorithm if necessary.
 
-For expensive objective functions, parallel evaluations is made available by specifying a parallel cluster.
+For expensive objective functions, parallel evaluations is made available by specifying a parallel cluster. Due to the R interpreter being non thread-safe, parallelization is not based on the openMPI calls of libcmaes, but is handled directly through the R parallel package. It should be considered for expensive objective functions only or large population sizes.
 
-All of the libcmaes CMA algorithms are available for selection, as well as population size control & maximum function evaluations.
+All of the libcmaes implemented algorithms are available for selection, as well as population size control & termination based on maximum function evaluations / x-convergence / function-convergence.
+
+Available algorithms are listed in: https://github.com/andrewsali/Rlibcmaes/blob/master/R/cmaEsAlgo.R
+
+Default parameter values are given in: https://github.com/andrewsali/Rlibcmaes/blob/master/R/cmaEsParams.R
 
 # Installation
 
@@ -17,31 +21,8 @@ library(devtools)
 install_github("andrewsali/Rlibcmaes",quick=TRUE,dependencies=TRUE)
 ```
 
-# Testing
-A quick-test of the package can be run via:
-
-```R
-# A simple test of the cmaesOptim function
-f <- function(x) {
-  Sys.sleep(.01)
-  return(crossprod(x-c(.3,.5))[1])
-}
-
-single.time <- system.time(test.optim <- cmaes(x0=c(.4,.6),optimFun=f,lowerB=c(0.35,0),upperB=c(1,1)))
-print(single.time)
-
-# now do parallel run
-cl <- parallel::makeCluster(4)
-
-parallel.time <- system.time(test.optim.parallel <- cmaes(x0=c(.4,.6),optimFun=f,lowerB=c(0.35,0),upperB=c(1,1),cl=cl))
-
-print(parallel.time)
-parallel::stopCluster(cl)
-
-# try an algorithm with increasing population size (IPOP)
-single.time <- system.time(test.optim <- cmaes(x0=c(.4,.6),optimFun=f,lowerB=c(0.35,0),upperB=c(1,1),cmaAlgorithm = cmaEsAlgo()$IPOP_CMAES,maxEval=1e4))
-print(single.time)
-```
+# Example / Testing
+A quick-test of the package can be run by executing the contents of https://github.com/andrewsali/Rlibcmaes/blob/master/tests/testthat/quadratic_test.R
 
 # Authors
 The R wrapper has been created by Andras Sali. All credit for the underlying library goes to libcmaes developers. 
