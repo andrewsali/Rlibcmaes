@@ -24,6 +24,9 @@ install_github("andrewsali/Rlibcmaes",quick=TRUE,dependencies=TRUE)
 # Example / Testing
 A quick-test of the package can be run by executing the contents of https://github.com/andrewsali/Rlibcmaes/blob/master/tests/testthat/quadratic_test.R
 
+# Modifications to libcmaes
+For the set of modifications applied to libcmaes, see: https://github.com/andrewsali/Rlibcmaes/blob/master/Rlibcmaes.patch
+
 # Authors
 The R wrapper has been created by Andras Sali. All credit for the underlying library goes to libcmaes developers. 
 
