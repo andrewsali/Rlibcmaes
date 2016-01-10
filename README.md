@@ -1,6 +1,6 @@
 # Rlibcmaes
 
-This is a lightweight R wrapper on the libcmaes C++ library (https://github.com/beniz/libcmaes/). Currently it supports box-constrained optimization only.
+This is a lightweight R wrapper on the libcmaes C++ library (https://github.com/beniz/libcmaes/). Currently it supports box-constrained optimization only. The aim  is to have a simple & familiar R optimization interface that suffices for most applications, with the ability to tune the parameters of the algorithm if necessary.
 
 For expensive objective functions, parallel evaluations is made available by specifying a parallel cluster. Due to the R interpreter being non thread-safe, parallelization is not based on the openMPI calls of libcmaes, but is handled directly through the R parallel package. It should be considered for expensive objective functions only or large population sizes.
 
