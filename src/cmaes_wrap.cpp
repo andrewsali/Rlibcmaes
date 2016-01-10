@@ -8,7 +8,7 @@ using namespace libcmaes;
 
 ProgressFunc<CMAParameters<GenoPheno<pwqBoundStrategy>>,CMASolutions> progress_fun = [](const CMAParameters<GenoPheno<pwqBoundStrategy>> &cmaparams, const CMASolutions &cmasols)
 {
-  std::cerr << cmasols << std::endl;
+  cmasols.print(std::cerr,0,cmaparams.get_gp()) << std::endl;
   return 0;
 };
 
