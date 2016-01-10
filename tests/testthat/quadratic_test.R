@@ -17,3 +17,5 @@ print(parallel.time)
 
 parallel::stopCluster(cl)
 
+single.time <- system.time(test.optim <- cmaes(x0=c(.4,.6),optimFun=f,lowerB=c(0.35,0),upperB=c(1,1),cmaAlgorithm = cmaEsAlgo()$IPOP_CMAES,maxEval=1e4))
+print(single.time)

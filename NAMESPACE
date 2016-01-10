@@ -2,4 +2,5 @@
 useDynLib(Rlibcmaes)
 export(cmaes)
 export(cmaesOptim)
+export(cmaEsAlgo)
 importFrom(Rcpp, evalCpp)

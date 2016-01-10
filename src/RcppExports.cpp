@@ -7,8 +7,8 @@
 using namespace Rcpp;
 
 // cmaesOptim
-NumericVector cmaesOptim(const NumericVector x0, const NumericVector sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB, int lambda, int maxEvals);
-RcppExport SEXP Rlibcmaes_cmaesOptim(SEXP x0SEXP, SEXP sigmaSEXP, SEXP optimFunSEXP, SEXP optimFunBlockSEXP, SEXP lowerBSEXP, SEXP upperBSEXP, SEXP lambdaSEXP, SEXP maxEvalsSEXP) {
+NumericVector cmaesOptim(const NumericVector x0, const NumericVector sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB, int cmaAlgo, int lambda, int maxEvals);
+RcppExport SEXP Rlibcmaes_cmaesOptim(SEXP x0SEXP, SEXP sigmaSEXP, SEXP optimFunSEXP, SEXP optimFunBlockSEXP, SEXP lowerBSEXP, SEXP upperBSEXP, SEXP cmaAlgoSEXP, SEXP lambdaSEXP, SEXP maxEvalsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -18,9 +18,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Function >::type optimFunBlock(optimFunBlockSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type lowerB(lowerBSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type upperB(upperBSEXP);
+    Rcpp::traits::input_parameter< int >::type cmaAlgo(cmaAlgoSEXP);
     Rcpp::traits::input_parameter< int >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< int >::type maxEvals(maxEvalsSEXP);
-    __result = Rcpp::wrap(cmaesOptim(x0, sigma, optimFun, optimFunBlock, lowerB, upperB, lambda, maxEvals));
+    __result = Rcpp::wrap(cmaesOptim(x0, sigma, optimFun, optimFunBlock, lowerB, upperB, cmaAlgo, lambda, maxEvals));
     return __result;
 END_RCPP
 }

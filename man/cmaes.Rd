@@ -2,10 +2,10 @@
 % Please edit documentation in R/cmaes.R
 \name{cmaes}
 \alias{cmaes}
-\title{Wrapper for the libcmaes library to run state-of-the art local / global optimization using CMA-ES variants.}
+\title{Wrapper for the libcmaes library to run state-of-the art local / global optimization using CMA-ES variants. See \href{https://github.com/beniz/libcmaes/}{libcmaes} and \href{https://www.lri.fr/~hansen/cmaesintro.html}{CMA-ES webpage} for further details.}
 \usage{
-cmaes(x0, optimFun, lowerB, upperB, sigma = NULL, lambda = NULL,
-  maxEvals = 1000L, cl = NULL)
+cmaes(x0, optimFun, lowerB, upperB, cmaAlgorithm = cmaEsAlgo()$CMAES_DEFAULT,
+  sigma = NULL, lambda = NULL, maxEvals = 1000000L, cl = NULL)
 }
 \arguments{
 \item{x0}{Initial guess  for parameters (mean)}
@@ -16,7 +16,9 @@ cmaes(x0, optimFun, lowerB, upperB, sigma = NULL, lambda = NULL,
 
 \item{upperB}{Upper bounds for parameters}
 
-\item{sigma}{Standard deviation of initial guess}
+\item{cmaAlgorithm}{Specifies the type of CMA search. See the source of \code{\link{cmaEsAlgo}} for possible options.}
+
+\item{sigma}{Standard deviation of initial guess. If not provided, default values is guessed from bounds.}
 
 \item{lambda}{Initial population size. Increase from default values if more 'global' solution is wanted. Note some strategies automatically do this (IPOP)}
 
@@ -25,6 +27,6 @@ cmaes(x0, optimFun, lowerB, upperB, sigma = NULL, lambda = NULL,
 \item{cl}{A cluster that can be used for parallel evaluation (use only if objective function is costly!)}
 }
 \description{
-Wrapper for the libcmaes library to run state-of-the art local / global optimization using CMA-ES variants.
+Wrapper for the libcmaes library to run state-of-the art local / global optimization using CMA-ES variants. See \href{https://github.com/beniz/libcmaes/}{libcmaes} and \href{https://www.lri.fr/~hansen/cmaesintro.html}{CMA-ES webpage} for further details.
 }
 
