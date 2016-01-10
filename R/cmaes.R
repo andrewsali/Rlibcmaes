@@ -9,12 +9,12 @@
 #' @param maxEvals Maximum number of function evaluations
 #' @param cl A cluster that can be used for parallel evaluation (use only if objective function is costly!)
 #' @export
-cmaes <- function(x0, optimFun, lowerB, upperB, cmaAlgorithm = cmaEsAlgo()$CMAES_DEFAULT, sigma=NULL, lambda=NULL, maxEvals = 1e6L, cl=NULL) {
+cmaes <- function(x0, optimFun, lowerB, upperB, params=cmaEsParams(), cl=NULL) {
   stopifnot(all(upperB > lowerB))
   
   # set default value for sigma
-  if (is.null(sigma)) {
-    sigma <- min(upperB-lowerB) / 2
+  if (is.null(params$sigma)) {
+    sigma <- median(upperB-lowerB) / 4
   }
   
   optimFunBlock <- function(x) {
@@ -23,5 +23,5 @@ cmaes <- function(x0, optimFun, lowerB, upperB, cmaAlgorithm = cmaEsAlgo()$CMAES
     else
       return(parallel::parApply(cl,x,2,optimFun))
   }
-  Rlibcmaes::cmaesOptim(x0, sigma, optimFun, optimFunBlock,lowerB, upperB, cmaAlgo = as.integer(cmaAlgorithm), lambda = ifelse(is.null(lambda),-1,lambda), maxEvals = maxEvals)
+  Rlibcmaes::cmaesOptim(x0, sigma, optimFun, optimFunBlock,lowerB, upperB, cmaAlgo = as.integer(params$cmaAlgorithm), lambda = ifelse(is.null(params$lambda),-1,params$lambda), maxEvals = params$maxEvals, xtol=params$xtol, ftol=params$ftol)
 }

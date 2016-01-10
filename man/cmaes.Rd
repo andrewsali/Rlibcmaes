@@ -4,8 +4,7 @@
 \alias{cmaes}
 \title{Wrapper for the libcmaes library to run state-of-the art local / global optimization using CMA-ES variants. See \href{https://github.com/beniz/libcmaes/}{libcmaes} and \href{https://www.lri.fr/~hansen/cmaesintro.html}{CMA-ES webpage} for further details.}
 \usage{
-cmaes(x0, optimFun, lowerB, upperB, cmaAlgorithm = cmaEsAlgo()$CMAES_DEFAULT,
-  sigma = NULL, lambda = NULL, maxEvals = 1000000L, cl = NULL)
+cmaes(x0, optimFun, lowerB, upperB, params = cmaEsParams(), cl = NULL)
 }
 \arguments{
 \item{x0}{Initial guess  for parameters (mean)}
@@ -16,6 +15,8 @@ cmaes(x0, optimFun, lowerB, upperB, cmaAlgorithm = cmaEsAlgo()$CMAES_DEFAULT,
 
 \item{upperB}{Upper bounds for parameters}
 
+\item{cl}{A cluster that can be used for parallel evaluation (use only if objective function is costly!)}
+
 \item{cmaAlgorithm}{Specifies the type of CMA search. See the source of \code{\link{cmaEsAlgo}} for possible options.}
 
 \item{sigma}{Standard deviation of initial guess. If not provided, default values is guessed from bounds.}
@@ -23,8 +24,6 @@ cmaes(x0, optimFun, lowerB, upperB, cmaAlgorithm = cmaEsAlgo()$CMAES_DEFAULT,
 \item{lambda}{Initial population size. Increase from default values if more 'global' solution is wanted. Note some strategies automatically do this (IPOP)}
 
 \item{maxEvals}{Maximum number of function evaluations}
-
-\item{cl}{A cluster that can be used for parallel evaluation (use only if objective function is costly!)}
 }
 \description{
 Wrapper for the libcmaes library to run state-of-the art local / global optimization using CMA-ES variants. See \href{https://github.com/beniz/libcmaes/}{libcmaes} and \href{https://www.lri.fr/~hansen/cmaesintro.html}{CMA-ES webpage} for further details.
