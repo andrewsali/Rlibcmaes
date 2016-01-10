@@ -13,7 +13,7 @@ ProgressFunc<CMAParameters<GenoPheno<pwqBoundStrategy>>,CMASolutions> progress_f
 };
 
 // [[Rcpp::export]] 
-NumericVector cmaesOptim(const NumericVector x0, const NumericVector sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB,int maxevals=1e3) 
+NumericVector cmaesOptim(const NumericVector x0, const NumericVector sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB, int lambda = -1, int maxEvals=1e3) 
 { 
   libcmaes::FitFunc cigtab = [&](const double *x, const int N) 
   { 
@@ -41,9 +41,9 @@ NumericVector cmaesOptim(const NumericVector x0, const NumericVector sigma, Func
 
   GenoPheno<pwqBoundStrategy> gp(lowerB.begin(),upperB.begin(),dim);
 
-  CMAParameters<GenoPheno<pwqBoundStrategy>> cmaparams(dim,&x0_stl.front(),sigma_stl[0],-1,0,gp,cigtabBlock); 
+  CMAParameters<GenoPheno<pwqBoundStrategy>> cmaparams(dim,&x0_stl.front(),sigma_stl[0],lambda,0,gp,cigtabBlock); 
 
-  cmaparams.set_max_fevals(maxevals);
+  cmaparams.set_max_fevals(maxEvals);
   //cmaparams.set_noisy();
   //cmaparams.set_uh(true);
   
@@ -52,15 +52,12 @@ NumericVector cmaesOptim(const NumericVector x0, const NumericVector sigma, Func
   
   //cmaparams.set_algo(VD_CMAES);
   CMASolutions cmasols = cmaes<GenoPheno<pwqBoundStrategy>>(cigtab,cmaparams,progress_fun);
-  //std::cout << cmasols;
   
   cmasols.sort_candidates();
   
-  //cmasols.print(std::cout,0,gp);
   NumericVector outputVal(dim);
   
   dVec phenox = gp.pheno(cmasols.best_candidate().get_x_dvec());
-  //dVec phenox = gp.pheno(cmasols.xmean());
   
   for (int j=0;j<dim;j++) {
     outputVal[j]=phenox[j];
