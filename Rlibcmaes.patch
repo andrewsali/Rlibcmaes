@@ -1,0 +1,246 @@
+From 5da84d331ac34af685a2dfa9e65d88b335e39ecc Mon Sep 17 00:00:00 2001
+From: andras <sali.andrew@gmail.com>
+Date: Sun, 10 Jan 2016 21:31:15 +0100
+Subject: [PATCH] Rlibcmaes modifications
+
+---
+ src/Makefile.am      | 23 -----------------------
+ src/cmaparameters.cc |  5 +++--
+ src/cmaparameters.h  |  9 +++++++--
+ src/eo_matrix.h      |  5 +++--
+ src/errstats.cc      |  6 +++---
+ src/esostrategy.cc   | 26 +++++++++++++++++---------
+ src/esostrategy.h    |  1 +
+ src/llogging.h       |  7 ++-----
+ 8 files changed, 36 insertions(+), 46 deletions(-)
+ delete mode 100644 src/Makefile.am
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+deleted file mode 100644
+index 6921b5f..0000000
+--- a/src/Makefile.am
++++ /dev/null
+@@ -1,23 +0,0 @@
+-
+-libcmaesdir = $(libdir)
+-libcmaesdatadir = $(datadir)
+-libcmaesincludedir = $(includedir)/libcmaes
+-
+-libcmaes_LTLIBRARIES=libcmaes.la
+-libcmaes_la_SOURCES=libcmaes_config.h cmaes.h eo_matrix.h cmastrategy.cc esoptimizer.h esostrategy.h esostrategy.cc cmasolutions.h cmasolutions.cc parameters.h cmaparameters.h cmaparameters.cc cmastopcriteria.h cmastopcriteria.cc ipopcmastrategy.h ipopcmastrategy.cc bipopcmastrategy.h bipopcmastrategy.cc covarianceupdate.h covarianceupdate.cc acovarianceupdate.h acovarianceupdate.cc vdcmaupdate.h vdcmaupdate.cc pwq_bound_strategy.h pwq_bound_strategy.cc eigenmvn.h candidate.h genopheno.h noboundstrategy.h scaling.h llogging.h pli.h errstats.cc errstats.h contour.h
+-
+-nobase_libcmaesinclude_HEADERS = cmaes.h opti_err.h eo_matrix.h cmastrategy.h esoptimizer.h esostrategy.h cmasolutions.h parameters.h cmaparameters.h cmastopcriteria.h ipopcmastrategy.h bipopcmastrategy.h covarianceupdate.h acovarianceupdate.h vdcmaupdate.h pwq_bound_strategy.h eigenmvn.h candidate.h genopheno.h noboundstrategy.h scaling.h llogging.h errstats.h pli.h contour.h
+-
+-if HAVE_SURROG
+-libcmaes_la_SOURCES += surrcmaes.h surrogatestrategy.cc surrogatestrategy.h surrogates/rankingsvm.hpp surrogates/rsvm_surr_strategy.hpp
+-nobase_libcmaesinclude_HEADERS += surrcmaes.h surrogatestrategy.h surrogates/rankingsvm.hpp surrogates/rsvm_surr_strategy.hpp
+-endif
+-
+-AM_CPPFLAGS=-I$(EIGEN3_INC)
+-AM_CXXFLAGS=-Wall -Wextra -g
+-if !HAVE_CLANG
+-AM_CXXFLAGS += -fopenmp
+-endif
+-
+-uninstall-hook:
+-	if test -d ${libcmaesincludedir}; then rm -rf ${libcmaesincludedir}; fi
+diff --git a/src/cmaparameters.cc b/src/cmaparameters.cc
+index 563bb5d..327fa4c 100644
+--- a/src/cmaparameters.cc
++++ b/src/cmaparameters.cc
+@@ -31,8 +31,9 @@ namespace libcmaes
+ 					   const double &sigma,
+ 					   const int &lambda,
+ 					   const uint64_t &seed,
+-					   const TGenoPheno &gp)
+-    :Parameters<TGenoPheno>(dim,x0,lambda,seed,gp),_sigma_init(sigma),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0)
++					   const TGenoPheno &gp,             
++             const BlockFitFunc &blockfun)
++    :Parameters<TGenoPheno>(dim,x0,lambda,seed,gp),_sigma_init(sigma),_nrestarts(9),_lazy_update(false),_lazy_value(0),_cm(1.0),_alphacov(2.0),_alphaminusold(0.5),_lambdamintarget(0.66),_alphaminusmin(1.0),_blockfunc(blockfun)
+   {
+     initialize_parameters();
+   }
+diff --git a/src/cmaparameters.h b/src/cmaparameters.h
+index 8cf0def..7c456ec 100644
+--- a/src/cmaparameters.h
++++ b/src/cmaparameters.h
+@@ -28,6 +28,9 @@
+ 
+ namespace libcmaes
+ {
++  // fitness function that returns for blocks
++  typedef std::function<Rcpp::NumericVector (const double*,const int N, const int M)> BlockFitFunc;
++
+   /**
+    * \brief Parameters for various flavors of the CMA-ES algorithm.
+    */
+@@ -63,7 +66,8 @@ namespace libcmaes
+ 		    const double &sigma,
+ 		    const int &lambda=-1,
+ 		    const uint64_t &seed=0,
+-		    const TGenoPheno &gp=TGenoPheno());
++		    const TGenoPheno &gp=TGenoPheno(),
++        const BlockFitFunc &blockfun=[](const double*,const int N, const int M){return 0;});
+       
+       /**
+        * \brief Constructor.
+@@ -141,7 +145,7 @@ namespace libcmaes
+ 	std::map<std::string,int>::const_iterator mit;
+ 	if ((mit = Parameters<TGenoPheno>::_algos.find(algo))!=Parameters<TGenoPheno>::_algos.end())
+ 	  Parameters<TGenoPheno>::_algo = (*mit).second;
+-	else LOG(ERROR) << "unknown algorithm " << algo << std::endl;
++	else LOG(ERRORcma) << "unknown algorithm " << algo << std::endl;
+ 	if (algo.find("sep")!=std::string::npos)
+ 	  set_sep();
+ 	if (algo.find("vd")!=std::string::npos)
+@@ -322,6 +326,7 @@ namespace libcmaes
+       bool _initial_elitist = false; /**< re-inject x0. */
+       bool _initial_elitist_on_restart = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+       
++      BlockFitFunc _blockfunc;
+       // stopping criteria
+       std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
+     };
+diff --git a/src/eo_matrix.h b/src/eo_matrix.h
+index 7f6694d..a511c73 100644
+--- a/src/eo_matrix.h
++++ b/src/eo_matrix.h
+@@ -23,13 +23,14 @@
+ #define EO_MATRIX_H
+ 
+ #include <algorithm>
+-#include <Eigen/Dense>
++#include "RcppEigen.h"
++//#include <Eigen/Dense>
+ #include <stdlib.h>
+ 
+ typedef Eigen::MatrixXd dMat; // declares a column-major non-sparse matrix type of double
+ typedef Eigen::VectorXd dVec; // declares a vector of double.
+ 
+-#include <unsupported/Eigen/MatrixFunctions>
++//#include <unsupported/Eigen/MatrixFunctions>
+ 
+ inline void removeRow(dMat& matrix, unsigned int rowToRemove)
+ {
+diff --git a/src/errstats.cc b/src/errstats.cc
+index d1cb037..3391985 100644
+--- a/src/errstats.cc
++++ b/src/errstats.cc
+@@ -20,7 +20,7 @@
+  */
+ 
+ #include "errstats.h"
+-#include <llogging.h>
++#include "llogging.h"
+ #include <iostream>
+ 
+ namespace libcmaes
+@@ -93,7 +93,7 @@ namespace libcmaes
+ 	CMASolutions ncitsol = errstats<TGenoPheno>::optimize_pk(func,parameters,citsol,k,x[k],x,false,false);
+ 	if (ncitsol._run_status < 0)
+ 	  {
+-	    LOG(ERROR) << "profile likelihood linesearch: optimization error " << ncitsol._run_status << " -- " << ncitsol.status_msg() << std::endl;
++	    LOG(ERRORcma) << "profile likelihood linesearch: optimization error " << ncitsol._run_status << " -- " << ncitsol.status_msg() << std::endl;
+ 	    // pad and return.
+ 	    for (int j=0;j<samplesize;j++)
+ 	      {
+@@ -105,7 +105,7 @@ namespace libcmaes
+ 	  }
+ 	else if (ncitsol.best_candidate().get_fvalue() < 1e-1*minfvalue)
+ 	  {
+-	    LOG(ERROR) << "profile likelihood finds new minimum: " << ncitsol.best_candidate().get_fvalue() << std::endl;
++	    LOG(ERRORcma) << "profile likelihood finds new minimum: " << ncitsol.best_candidate().get_fvalue() << std::endl;
+ 	    // pad and return.
+ 	    for (int j=0;j<samplesize;j++)
+ 	      {
+diff --git a/src/esostrategy.cc b/src/esostrategy.cc
+index c3a5a97..1c69f5b 100644
+--- a/src/esostrategy.cc
++++ b/src/esostrategy.cc
+@@ -87,18 +87,26 @@ namespace libcmaes
+ #ifdef HAVE_DEBUG
+     std::chrono::time_point<std::chrono::system_clock> tstart = std::chrono::system_clock::now();
+ #endif
+-    // one candidate per row.
+-#pragma omp parallel for if (_parameters._mt_feval)
++    // evaluate candidate fvals in block
++    Rcpp::NumericVector fvals(candidates.cols());
++    
++    if (phenocandidates.size())
++      fvals = _parameters._blockfunc(phenocandidates.col(0).data(),candidates.rows(),candidates.cols());
++    else
++      fvals = _parameters._blockfunc(candidates.col(0).data(),candidates.rows(),candidates.cols());
++
+     for (int r=0;r<candidates.cols();r++)
+-      {
+-	_solutions._candidates.at(r).set_x(candidates.col(r));
+-	_solutions._candidates.at(r).set_id(r);
+-	if (phenocandidates.size())
++    {
++      _solutions._candidates.at(r).set_x(candidates.col(r));
++      _solutions._candidates.at(r).set_id(r);
++      _solutions._candidates.at(r).set_fvalue(fvals[r]);
++    }    
++	/*if (phenocandidates.size())
+ 	  _solutions._candidates.at(r).set_fvalue(_func(phenocandidates.col(r).data(),candidates.rows()));
+ 	else _solutions._candidates.at(r).set_fvalue(_func(candidates.col(r).data(),candidates.rows()));
+-	
++	*/
+ 	//std::cerr << "candidate x: " << _solutions._candidates.at(r)._x.transpose() << std::endl;
+-      }
++
+     int nfcalls = candidates.cols();
+     
+     // evaluation step of uncertainty handling scheme.
+@@ -169,7 +177,7 @@ namespace libcmaes
+     dVec vgradf(_parameters._dim);
+     dVec epsilon = 1e-8 * (dVec::Constant(_parameters._dim,1.0) + x.cwiseAbs());
+     double fx = _func(x.data(),_parameters._dim);
+-#pragma omp parallel for if (_parameters._mt_feval)
++
+     for (int i=0;i<_parameters._dim;i++)
+       {
+ 	dVec ei1 = x;
+diff --git a/src/esostrategy.h b/src/esostrategy.h
+index ec651df..ad943eb 100644
+--- a/src/esostrategy.h
++++ b/src/esostrategy.h
+@@ -30,6 +30,7 @@
+ namespace libcmaes
+ {
+   typedef std::function<double (const double*, const int &n)> FitFunc;
++
+   typedef std::function<dVec (const double*, const int &n)> GradFunc;
+ 
+   typedef std::function<void(const dMat&, const dMat&)> EvalFunc;
+diff --git a/src/llogging.h b/src/llogging.h
+index d3722b6..93d8170 100644
+--- a/src/llogging.h
++++ b/src/llogging.h
+@@ -24,16 +24,13 @@
+ 
+ #include "libcmaes_config.h"
+ 
+-#ifdef HAVE_GLOG // HAVE_LIB_GLOG
+-#include <glog/logging.h>
+-#else
+ #include <iostream>
+ 
+ namespace libcmaes
+ {
+   static std::string INFO="INFO";
+   static std::string WARNING="WARNING";
+-  static std::string ERROR="ERROR";
++  static std::string ERRORcma="ERROR";
+   static std::string FATAL="FATAL";
+ 
+   static std::ostream nullstream(0);
+@@ -52,4 +49,4 @@ inline std::ostream& LOG_IF(const std::string &severity,const bool &condition,st
+ }
+ }
+ #endif
+-#endif
++
+-- 
+2.1.4
+

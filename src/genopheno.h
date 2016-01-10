@@ -100,7 +100,7 @@ namespace libcmaes
       if (!_id)
 	{
 	  dMat ncandidates = dMat(candidates.rows(),candidates.cols());
-
+#pragma omp parallel for if (candidates.cols() >= 100)
 	  for (int i=0;i<candidates.cols();i++)
 	    {
 	      dVec ext = dVec(candidates.rows());
@@ -117,7 +117,7 @@ namespace libcmaes
       if (!_id)
 	{
 	  dMat ncandidates = dMat(candidates.rows(),candidates.cols());
-
+#pragma omp parallel for if (candidates.cols() >= 100)
 	  for (int i=0;i<candidates.cols();i++)
 	    {
 	      dVec in = dVec(candidates.rows());
@@ -136,7 +136,7 @@ namespace libcmaes
       dMat ncandidates = pheno_candidates(candidates);
 
       // apply bounds.
-
+#pragma omp parallel for if (ncandidates.cols() >= 100)
       for (int i=0;i<ncandidates.cols();i++)
 	{
 	  dVec ycoli;
@@ -147,7 +147,7 @@ namespace libcmaes
       // apply scaling.
       if (!_scalingstrategy._id)
 	{
-
+#pragma omp parallel for if (ncandidates.cols() >= 100)
 	  for (int i=0;i<ncandidates.cols();i++)
 	    {
 	      dVec ycoli;
@@ -164,7 +164,7 @@ namespace libcmaes
       dMat ncandidates = candidates;
       if (!_scalingstrategy._id)
 	{
-
+#pragma omp parallel for if (ncandidates.cols() >= 100)
 	  for (int i=0;i<ncandidates.cols();i++)
 	    {
 	      dVec ycoli;
@@ -174,7 +174,7 @@ namespace libcmaes
 	}
       
       // reverse bounds.
-
+#pragma omp parallel for if (ncandidates.cols() >= 100)
       for (int i=0;i<ncandidates.cols();i++)
 	{
 	  dVec ycoli;
@@ -323,7 +323,7 @@ namespace libcmaes
       else ncandidates = candidates;
       
       // apply scaling.
-
+#pragma omp parallel for if (ncandidates.cols() >= 100)
       for (int i=0;i<ncandidates.cols();i++)
 	{
 	  dVec ycoli;
