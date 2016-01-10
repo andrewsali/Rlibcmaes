@@ -8,6 +8,7 @@ Maintainer: Your Name <your@email.com>
 Description: More about what it does (maybe more than one line)
 License: LGPL 3
 Imports: 
+    parallel,
     Rcpp (>= 0.12.2)
 LinkingTo: Rcpp, RcppEigen
 RoxygenNote: 5.0.1
