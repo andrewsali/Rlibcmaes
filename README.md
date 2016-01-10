@@ -4,7 +4,7 @@ This is a lightweight R wrapper on the libcmaes C++ library (https://github.com/
 
 For expensive objective functions, parallel evaluations is made available by specifying a parallel cluster.
 
-All of the libcmaes CMA algorithms are available for selection, as well as population size control & maximum function evaluations.
+All of the libcmaes CMA algorithms are available for selection, as well as population size control & termination based on maximum function evaluations / x-convergence / function-convergence.
 
 # Installation
 
