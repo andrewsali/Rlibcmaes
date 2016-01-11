@@ -61,4 +61,4 @@ NumericVector cmaesOptim(const NumericVector x0, const NumericVector sigma, Func
     outputVal[j]=phenox[j];
   }
   return(outputVal);
-}; 
+}
