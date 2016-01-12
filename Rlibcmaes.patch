@@ -1,18 +1,43 @@
-From 5da84d331ac34af685a2dfa9e65d88b335e39ecc Mon Sep 17 00:00:00 2001
+From aeda212acc33a8fc4d1758f58191b558f62a162e Mon Sep 17 00:00:00 2001
 From: andras <sali.andrew@gmail.com>
-Date: Sun, 10 Jan 2016 21:31:15 +0100
-Subject: [PATCH] Rlibcmaes modifications
+Date: Tue, 12 Jan 2016 22:46:18 +0100
+Subject: [PATCH 1/2] Rlibcmaes changes to libcmaes
 
 ---
- src/Makefile.am      | 23 -----------------------
- src/cmaparameters.cc |  5 +++--
- src/cmaparameters.h  |  9 +++++++--
- src/eo_matrix.h      |  5 +++--
- src/errstats.cc      |  6 +++---
- src/esostrategy.cc   | 26 +++++++++++++++++---------
- src/esostrategy.h    |  1 +
- src/llogging.h       |  7 ++-----
- 8 files changed, 36 insertions(+), 46 deletions(-)
+ src/libcmaes_config.h | 3 +++
+ 1 file changed, 3 insertions(+)
+ create mode 100644 src/libcmaes_config.h
+
+diff --git a/src/libcmaes_config.h b/src/libcmaes_config.h
+new file mode 100644
+index 0000000..21d42c2
+--- /dev/null
++++ b/src/libcmaes_config.h
+@@ -0,0 +1,3 @@
++#define HAVE_SURROG 1
++
++//#undef HAVE_DEBUG 
+-- 
+2.1.4
+
+
+From 30cef1983ddcdd6b77dccdbce3c08941697873b6 Mon Sep 17 00:00:00 2001
+From: andras <sali.andrew@gmail.com>
+Date: Tue, 12 Jan 2016 22:49:27 +0100
+Subject: [PATCH 2/2] Rlibcmaes changes to libcmaes
+
+---
+ src/Makefile.am      |  23 --------
+ src/cmaparameters.cc |   5 +-
+ src/cmaparameters.h  |   9 +++-
+ src/eo_matrix.h      | 147 ++++++++++++++++++++++++++-------------------------
+ src/errstats.cc      |   6 +--
+ src/esostrategy.cc   |  26 +++++----
+ src/esostrategy.h    |   1 +
+ src/genopheno.h      |  14 ++---
+ src/llogging.h       |   7 +--
+ src/parameters.h     |   2 +-
+ 10 files changed, 115 insertions(+), 125 deletions(-)
  delete mode 100644 src/Makefile.am
 
 diff --git a/src/Makefile.am b/src/Makefile.am
@@ -102,26 +127,157 @@ index 8cf0def..7c456ec 100644
        std::map<int,bool> _stoppingcrit; /**< control list of stopping criteria. */
      };
 diff --git a/src/eo_matrix.h b/src/eo_matrix.h
-index 7f6694d..a511c73 100644
+index 7f6694d..0339ad6 100644
 --- a/src/eo_matrix.h
 +++ b/src/eo_matrix.h
-@@ -23,13 +23,14 @@
- #define EO_MATRIX_H
- 
- #include <algorithm>
+@@ -1,73 +1,74 @@
+-/**
+- * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
+- * Copyright (c) 2014 Inria
+- * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
+- *
+- * This file is part of libcmaes.
+- *
+- * libcmaes is free software: you can redistribute it and/or modify
+- * it under the terms of the GNU Lesser General Public License as published by
+- * the Free Software Foundation, either version 3 of the License, or
+- * (at your option) any later version.
+- *
+- * libcmaes is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU Lesser General Public License for more details.
+- *
+- * You should have received a copy of the GNU Lesser General Public License
+- * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
+- */
+-
+-#ifndef EO_MATRIX_H
+-#define EO_MATRIX_H
+-
+-#include <algorithm>
 -#include <Eigen/Dense>
+-#include <stdlib.h>
+-
+-typedef Eigen::MatrixXd dMat; // declares a column-major non-sparse matrix type of double
+-typedef Eigen::VectorXd dVec; // declares a vector of double.
+-
+-#include <unsupported/Eigen/MatrixFunctions>
+-
+-inline void removeRow(dMat& matrix, unsigned int rowToRemove)
+-{
+-  unsigned int numRows = matrix.rows()-1;
+-  unsigned int numCols = matrix.cols();
+-
+-  if( rowToRemove < numRows )
+-    matrix.block(rowToRemove,0,numRows-rowToRemove,numCols) = matrix.block(rowToRemove+1,0,numRows-rowToRemove,numCols);
+-
+-  matrix.conservativeResize(numRows,numCols);
+-}
+-
+-inline void removeColumn(dMat& matrix, unsigned int colToRemove)
+-{
+-  unsigned int numRows = matrix.rows();
+-  unsigned int numCols = matrix.cols()-1;
+-
+-  if( colToRemove < numCols )
+-    matrix.block(0,colToRemove,numRows,numCols-colToRemove) = matrix.block(0,colToRemove+1,numRows,numCols-colToRemove);
+-
+-  matrix.conservativeResize(numRows,numCols);
+-}
+-
+-inline void removeElement(dVec &vec, unsigned int k)
+-{
+-  if (k >= vec.size())
+-    return;
+-  std::copy(vec.data()+k+1,vec.data()+vec.size(),vec.data()+k);
+-  vec.conservativeResize(vec.size()-1);
+-}
+-
+-inline void addElement(dVec &vec, unsigned int k, const double &xk)
+-{
+-  if (k >= vec.size()+1)
+-    return;
+-  vec.conservativeResize(vec.size()+1);
+-  std::copy(vec.data()+k,vec.data()+vec.size()-1,vec.data()+k+1);
+-  vec[k] = xk;
+-}
+-
+-#endif
++/**
++ * CMA-ES, Covariance Matrix Adaptation Evolution Strategy
++ * Copyright (c) 2014 Inria
++ * Author: Emmanuel Benazera <emmanuel.benazera@lri.fr>
++ *
++ * This file is part of libcmaes.
++ *
++ * libcmaes is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as published by
++ * the Free Software Foundation, either version 3 of the License, or
++ * (at your option) any later version.
++ *
++ * libcmaes is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with libcmaes.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef EO_MATRIX_H
++#define EO_MATRIX_H
++
++#include <algorithm>
 +#include "RcppEigen.h"
 +//#include <Eigen/Dense>
- #include <stdlib.h>
- 
- typedef Eigen::MatrixXd dMat; // declares a column-major non-sparse matrix type of double
- typedef Eigen::VectorXd dVec; // declares a vector of double.
- 
--#include <unsupported/Eigen/MatrixFunctions>
++#include <stdlib.h>
++
++typedef Eigen::MatrixXd dMat; // declares a column-major non-sparse matrix type of double
++typedef Eigen::VectorXd dVec; // declares a vector of double.
++
 +//#include <unsupported/Eigen/MatrixFunctions>
- 
- inline void removeRow(dMat& matrix, unsigned int rowToRemove)
- {
++
++inline void removeRow(dMat& matrix, unsigned int rowToRemove)
++{
++  unsigned int numRows = matrix.rows()-1;
++  unsigned int numCols = matrix.cols();
++
++  if( rowToRemove < numRows )
++    matrix.block(rowToRemove,0,numRows-rowToRemove,numCols) = matrix.block(rowToRemove+1,0,numRows-rowToRemove,numCols);
++
++  matrix.conservativeResize(numRows,numCols);
++}
++
++inline void removeColumn(dMat& matrix, unsigned int colToRemove)
++{
++  unsigned int numRows = matrix.rows();
++  unsigned int numCols = matrix.cols()-1;
++
++  if( colToRemove < numCols )
++    matrix.block(0,colToRemove,numRows,numCols-colToRemove) = matrix.block(0,colToRemove+1,numRows,numCols-colToRemove);
++
++  matrix.conservativeResize(numRows,numCols);
++}
++
++inline void removeElement(dVec &vec, unsigned int k)
++{
++  if ((int) k >= vec.size())
++    return;
++  std::copy(vec.data()+k+1,vec.data()+vec.size(),vec.data()+k);
++  vec.conservativeResize(vec.size()-1);
++}
++
++inline void addElement(dVec &vec, unsigned int k, const double &xk)
++{
++  if ((int) k >= vec.size()+1)
++    return;
++  vec.conservativeResize(vec.size()+1);
++  std::copy(vec.data()+k,vec.data()+vec.size()-1,vec.data()+k+1);
++  vec[k] = xk;
++}
++
++#endif
 diff --git a/src/errstats.cc b/src/errstats.cc
 index d1cb037..3391985 100644
 --- a/src/errstats.cc
@@ -213,6 +369,73 @@ index ec651df..ad943eb 100644
    typedef std::function<dVec (const double*, const int &n)> GradFunc;
  
    typedef std::function<void(const dMat&, const dMat&)> EvalFunc;
+diff --git a/src/genopheno.h b/src/genopheno.h
+index f87f3b9..bbd544c 100644
+--- a/src/genopheno.h
++++ b/src/genopheno.h
+@@ -100,7 +100,7 @@ namespace libcmaes
+       if (!_id)
+ 	{
+ 	  dMat ncandidates = dMat(candidates.rows(),candidates.cols());
+-#pragma omp parallel for if (candidates.cols() >= 100)
++//#pragma omp parallel for if (candidates.cols() >= 100)
+ 	  for (int i=0;i<candidates.cols();i++)
+ 	    {
+ 	      dVec ext = dVec(candidates.rows());
+@@ -117,7 +117,7 @@ namespace libcmaes
+       if (!_id)
+ 	{
+ 	  dMat ncandidates = dMat(candidates.rows(),candidates.cols());
+-#pragma omp parallel for if (candidates.cols() >= 100)
++//#pragma omp parallel for if (candidates.cols() >= 100)
+ 	  for (int i=0;i<candidates.cols();i++)
+ 	    {
+ 	      dVec in = dVec(candidates.rows());
+@@ -136,7 +136,7 @@ namespace libcmaes
+       dMat ncandidates = pheno_candidates(candidates);
+ 
+       // apply bounds.
+-#pragma omp parallel for if (ncandidates.cols() >= 100)
++//#pragma omp parallel for if (ncandidates.cols() >= 100)
+       for (int i=0;i<ncandidates.cols();i++)
+ 	{
+ 	  dVec ycoli;
+@@ -147,7 +147,7 @@ namespace libcmaes
+       // apply scaling.
+       if (!_scalingstrategy._id)
+ 	{
+-#pragma omp parallel for if (ncandidates.cols() >= 100)
++//#pragma omp parallel for if (ncandidates.cols() >= 100)
+ 	  for (int i=0;i<ncandidates.cols();i++)
+ 	    {
+ 	      dVec ycoli;
+@@ -164,7 +164,7 @@ namespace libcmaes
+       dMat ncandidates = candidates;
+       if (!_scalingstrategy._id)
+ 	{
+-#pragma omp parallel for if (ncandidates.cols() >= 100)
++//#pragma omp parallel for if (ncandidates.cols() >= 100)
+ 	  for (int i=0;i<ncandidates.cols();i++)
+ 	    {
+ 	      dVec ycoli;
+@@ -174,7 +174,7 @@ namespace libcmaes
+ 	}
+       
+       // reverse bounds.
+-#pragma omp parallel for if (ncandidates.cols() >= 100)
++//#pragma omp parallel for if (ncandidates.cols() >= 100)
+       for (int i=0;i<ncandidates.cols();i++)
+ 	{
+ 	  dVec ycoli;
+@@ -323,7 +323,7 @@ namespace libcmaes
+       else ncandidates = candidates;
+       
+       // apply scaling.
+-#pragma omp parallel for if (ncandidates.cols() >= 100)
++//#pragma omp parallel for if (ncandidates.cols() >= 100)
+       for (int i=0;i<ncandidates.cols();i++)
+ 	{
+ 	  dVec ycoli;
 diff --git a/src/llogging.h b/src/llogging.h
 index d3722b6..93d8170 100644
 --- a/src/llogging.h
@@ -241,6 +464,19 @@ index d3722b6..93d8170 100644
  #endif
 -#endif
 +
+diff --git a/src/parameters.h b/src/parameters.h
+index 4c113b9..0c74ede 100644
+--- a/src/parameters.h
++++ b/src/parameters.h
+@@ -582,7 +582,7 @@ namespace libcmaes
+       int _max_hist = -1; /**< max size of the history, keeps memory requirements fixed. */
+ 
+       bool _maximize = false; /**< convenience option of maximizing -f instead of minimizing f. */
+-      static std::map<std::string,int> _algos; /**< of the form { {"cmaes",0}, {"ipop",1}, ...} */;
++      static std::map<std::string,int> _algos; /**< of the form { {"cmaes",0}, {"ipop",1}, ...} */
+ 
+       bool _initial_fvalue = false; /**< whether to compute initial objective function value (not required). */
+ 
 -- 
 2.1.4
 
