@@ -5,7 +5,20 @@
 \title{Set parameters of CMA-ES optimization}
 \usage{
 cmaEsParams(cmaAlgorithm = cmaEsAlgo()$CMAES_DEFAULT, sigma = NULL,
-  xtol = 1e-12, ftol = 1e-12, lambda = NULL, maxEvals = 1000000L)
+  xtol = 1e-12, ftol = 1e-12, lambda = NULL, maxEvals = 10000L)
+}
+\arguments{
+\item{cmaAlgorithm}{Specifies the type of CMA search. See the source of \code{\link{cmaEsAlgo}} for possible options.}
+
+\item{sigma}{Standard deviation of initial guess. If not provided, default values is guessed from bounds.}
+
+\item{xtol}{Stopping tolerance based on change in parameter values}
+
+\item{ftol}{Stopping tolerance based on function value}
+
+\item{lambda}{Initial population size. Increase from default values if more 'global' solution is wanted. Note some strategies automatically do this (IPOP)}
+
+\item{maxEvals}{Maximum number of function evaluations}
 }
 \description{
 Set parameters of CMA-ES optimization

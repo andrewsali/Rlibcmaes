@@ -3,10 +3,7 @@
 #' @param optimFun R function to be minimized
 #' @param lowerB Lower bounds for parameters
 #' @param upperB Upper bounds for parameters
-#' @param cmaAlgorithm Specifies the type of CMA search. See the source of \code{\link{cmaEsAlgo}} for possible options.
-#' @param sigma Standard deviation of initial guess. If not provided, default values is guessed from bounds.
-#' @param lambda Initial population size. Increase from default values if more 'global' solution is wanted. Note some strategies automatically do this (IPOP)
-#' @param maxEvals Maximum number of function evaluations
+#' @param params The CMA-ES parameters, can be set with \code{\link{cmaEsParams}}
 #' @param cl A cluster that can be used for parallel evaluation (use only if objective function is costly!)
 #' @export
 cmaes <- function(x0, optimFun, lowerB, upperB, params=cmaEsParams(), cl=NULL) {

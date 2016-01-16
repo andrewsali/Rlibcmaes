@@ -15,15 +15,9 @@ cmaes(x0, optimFun, lowerB, upperB, params = cmaEsParams(), cl = NULL)
 
 \item{upperB}{Upper bounds for parameters}
 
+\item{params}{The CMA-ES parameters, can be set with \code{\link{cmaEsParams}}}
+
 \item{cl}{A cluster that can be used for parallel evaluation (use only if objective function is costly!)}
-
-\item{cmaAlgorithm}{Specifies the type of CMA search. See the source of \code{\link{cmaEsAlgo}} for possible options.}
-
-\item{sigma}{Standard deviation of initial guess. If not provided, default values is guessed from bounds.}
-
-\item{lambda}{Initial population size. Increase from default values if more 'global' solution is wanted. Note some strategies automatically do this (IPOP)}
-
-\item{maxEvals}{Maximum number of function evaluations}
 }
 \description{
 Wrapper for the libcmaes library to run state-of-the art local / global optimization using CMA-ES variants. See \href{https://github.com/beniz/libcmaes/}{libcmaes} and \href{https://www.lri.fr/~hansen/cmaesintro.html}{CMA-ES webpage} for further details.
