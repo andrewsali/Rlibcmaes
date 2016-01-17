@@ -7,8 +7,8 @@
 using namespace Rcpp;
 
 // cmaesOptim
-NumericVector cmaesOptim(const NumericVector x0, double sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB, int cmaAlgo, int lambda, int maxEvals, double xtol, double ftol, int traceFreq, int seed);
-RcppExport SEXP Rlibcmaes_cmaesOptim(SEXP x0SEXP, SEXP sigmaSEXP, SEXP optimFunSEXP, SEXP optimFunBlockSEXP, SEXP lowerBSEXP, SEXP upperBSEXP, SEXP cmaAlgoSEXP, SEXP lambdaSEXP, SEXP maxEvalsSEXP, SEXP xtolSEXP, SEXP ftolSEXP, SEXP traceFreqSEXP, SEXP seedSEXP) {
+NumericVector cmaesOptim(const NumericVector x0, double sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB, int cmaAlgo, int lambda, int maxEvals, double xtol, double ftol, int traceFreq, int seed, bool quietRun);
+RcppExport SEXP Rlibcmaes_cmaesOptim(SEXP x0SEXP, SEXP sigmaSEXP, SEXP optimFunSEXP, SEXP optimFunBlockSEXP, SEXP lowerBSEXP, SEXP upperBSEXP, SEXP cmaAlgoSEXP, SEXP lambdaSEXP, SEXP maxEvalsSEXP, SEXP xtolSEXP, SEXP ftolSEXP, SEXP traceFreqSEXP, SEXP seedSEXP, SEXP quietRunSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -25,7 +25,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type ftol(ftolSEXP);
     Rcpp::traits::input_parameter< int >::type traceFreq(traceFreqSEXP);
     Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
-    __result = Rcpp::wrap(cmaesOptim(x0, sigma, optimFun, optimFunBlock, lowerB, upperB, cmaAlgo, lambda, maxEvals, xtol, ftol, traceFreq, seed));
+    Rcpp::traits::input_parameter< bool >::type quietRun(quietRunSEXP);
+    __result = Rcpp::wrap(cmaesOptim(x0, sigma, optimFun, optimFunBlock, lowerB, upperB, cmaAlgo, lambda, maxEvals, xtol, ftol, traceFreq, seed, quietRun));
     return __result;
 END_RCPP
 }

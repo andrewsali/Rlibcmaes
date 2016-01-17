@@ -8,14 +8,14 @@ using namespace libcmaes;
 
 ProgressFunc<CMAParameters<GenoPheno<pwqBoundStrategy>>,CMASolutions> progress_fun = [](const CMAParameters<GenoPheno<pwqBoundStrategy>> &cmaparams, const CMASolutions &cmasols)
 {
-  if (cmasols.niter() % cmaparams.get_traceFreq() == 0) {
+  if ((cmasols.niter()+1) % cmaparams.get_traceFreq() == 0) {
     cmasols.print(std::cerr,0,cmaparams.get_gp()) << std::endl;
   }
   return 0;
 };
 
 // [[Rcpp::export]] 
-NumericVector cmaesOptim(const NumericVector x0, double sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB, int cmaAlgo, int lambda = -1, int maxEvals=1e3, double xtol=1e-12, double ftol=1e-12, int traceFreq=1, int seed=0) 
+NumericVector cmaesOptim(const NumericVector x0, double sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB, int cmaAlgo, int lambda = -1, int maxEvals=1e3, double xtol=1e-12, double ftol=1e-12, int traceFreq=1, int seed=0, bool quietRun=false) 
 { 
   libcmaes::FitFunc cigtab = [&](const double *x, const int N) 
   { 
@@ -50,7 +50,7 @@ NumericVector cmaesOptim(const NumericVector x0, double sigma, Function optimFun
   cmaparams.set_ftolerance(ftol);
   cmaparams.set_xtolerance(xtol);
   cmaparams.set_traceFreq(traceFreq);
-  cmaparams.set_quiet(false);
+  cmaparams.set_quiet(quietRun);
   
   CMASolutions cmasols = cmaes<GenoPheno<pwqBoundStrategy>>(cigtab,cmaparams,progress_fun);
   
