@@ -50,6 +50,7 @@ NumericVector cmaesOptim(const NumericVector x0, double sigma, Function optimFun
   cmaparams.set_ftolerance(ftol);
   cmaparams.set_xtolerance(xtol);
   cmaparams.set_traceFreq(traceFreq);
+  cmaparams.set_quiet(false);
   
   CMASolutions cmasols = cmaes<GenoPheno<pwqBoundStrategy>>(cigtab,cmaparams,progress_fun);
   
