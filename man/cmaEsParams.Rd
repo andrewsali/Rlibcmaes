@@ -5,7 +5,8 @@
 \title{Set parameters of CMA-ES optimization}
 \usage{
 cmaEsParams(cmaAlgorithm = cmaEsAlgo()$CMAES_DEFAULT, sigma = NULL,
-  xtol = 1e-12, ftol = 1e-12, lambda = NULL, maxEvals = 10000L)
+  xtol = 1e-12, ftol = 1e-12, lambda = NULL, maxEvals = 10000L,
+  trace = 1)
 }
 \arguments{
 \item{cmaAlgorithm}{Specifies the type of CMA search. See the source of \code{\link{cmaEsAlgo}} for possible options.}

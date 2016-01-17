@@ -8,12 +8,14 @@ using namespace libcmaes;
 
 ProgressFunc<CMAParameters<GenoPheno<pwqBoundStrategy>>,CMASolutions> progress_fun = [](const CMAParameters<GenoPheno<pwqBoundStrategy>> &cmaparams, const CMASolutions &cmasols)
 {
-  cmasols.print(std::cerr,0,cmaparams.get_gp()) << std::endl;
+  if (cmasols.niter() % cmaparams.get_traceFreq() == 0) {
+    cmasols.print(std::cerr,0,cmaparams.get_gp()) << std::endl;
+  }
   return 0;
 };
 
 // [[Rcpp::export]] 
-NumericVector cmaesOptim(const NumericVector x0, const NumericVector sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB, int cmaAlgo, int lambda = -1, int maxEvals=1e3, double xtol=1e-12, double ftol=1e-12) 
+NumericVector cmaesOptim(const NumericVector x0, double sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB, int cmaAlgo, int lambda = -1, int maxEvals=1e3, double xtol=1e-12, double ftol=1e-12, int traceFreq=1) 
 { 
   libcmaes::FitFunc cigtab = [&](const double *x, const int N) 
   { 
@@ -37,17 +39,17 @@ NumericVector cmaesOptim(const NumericVector x0, const NumericVector sigma, Func
   
   int dim = x0.size(); 
   std::vector<double> x0_stl= Rcpp::as<std::vector<double> >(x0); 
-  std::vector<double> sigma_stl = Rcpp::as<std::vector<double> >(sigma); 
 
   GenoPheno<pwqBoundStrategy> gp(lowerB.begin(),upperB.begin(),dim);
 
-  CMAParameters<GenoPheno<pwqBoundStrategy>> cmaparams(dim,&x0_stl.front(),sigma_stl[0],lambda,0,gp,cigtabBlock); 
+  CMAParameters<GenoPheno<pwqBoundStrategy>> cmaparams(dim,&x0_stl.front(),sigma,lambda,0,gp,cigtabBlock); 
 
   // set additional parameters
   cmaparams.set_max_fevals(maxEvals);
   cmaparams.set_algo(cmaAlgo);
   cmaparams.set_ftolerance(ftol);
   cmaparams.set_xtolerance(xtol);
+  cmaparams.set_traceFreq(traceFreq);
   
   CMASolutions cmasols = cmaes<GenoPheno<pwqBoundStrategy>>(cigtab,cmaparams,progress_fun);
   

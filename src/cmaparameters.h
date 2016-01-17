@@ -110,6 +110,11 @@ namespace libcmaes
       
       void reset_as_fixed(const int &k);
       
+      // set print frequency
+      void set_traceFreq(const int &traceFreq) {
+        this->_traceFreq = traceFreq;
+      }
+      
       /**
        * \brief adapt parameters for noisy objective function.
        */
@@ -152,6 +157,9 @@ namespace libcmaes
 	  set_vd();
       }
 
+      int get_traceFreq() const {
+        return _traceFreq;
+      }
       /**
        * \brief returns initial sigma value
        * @return initial sigma value
@@ -325,6 +333,9 @@ namespace libcmaes
       bool _elitist = false; /**< re-inject the best-ever seen solution. */
       bool _initial_elitist = false; /**< re-inject x0. */
       bool _initial_elitist_on_restart = false; /**< activate the restart from and re-injection of the best seen solution if not the final one. */
+      
+      // frequency with which we print trace
+      int _traceFreq = 1;
       
       BlockFitFunc _blockfunc;
       // stopping criteria

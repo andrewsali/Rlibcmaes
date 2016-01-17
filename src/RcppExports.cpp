@@ -7,13 +7,13 @@
 using namespace Rcpp;
 
 // cmaesOptim
-NumericVector cmaesOptim(const NumericVector x0, const NumericVector sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB, int cmaAlgo, int lambda, int maxEvals, double xtol, double ftol);
-RcppExport SEXP Rlibcmaes_cmaesOptim(SEXP x0SEXP, SEXP sigmaSEXP, SEXP optimFunSEXP, SEXP optimFunBlockSEXP, SEXP lowerBSEXP, SEXP upperBSEXP, SEXP cmaAlgoSEXP, SEXP lambdaSEXP, SEXP maxEvalsSEXP, SEXP xtolSEXP, SEXP ftolSEXP) {
+NumericVector cmaesOptim(const NumericVector x0, double sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB, int cmaAlgo, int lambda, int maxEvals, double xtol, double ftol, int traceFreq);
+RcppExport SEXP Rlibcmaes_cmaesOptim(SEXP x0SEXP, SEXP sigmaSEXP, SEXP optimFunSEXP, SEXP optimFunBlockSEXP, SEXP lowerBSEXP, SEXP upperBSEXP, SEXP cmaAlgoSEXP, SEXP lambdaSEXP, SEXP maxEvalsSEXP, SEXP xtolSEXP, SEXP ftolSEXP, SEXP traceFreqSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< const NumericVector >::type x0(x0SEXP);
-    Rcpp::traits::input_parameter< const NumericVector >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma(sigmaSEXP);
     Rcpp::traits::input_parameter< Function >::type optimFun(optimFunSEXP);
     Rcpp::traits::input_parameter< Function >::type optimFunBlock(optimFunBlockSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type lowerB(lowerBSEXP);
@@ -23,7 +23,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type maxEvals(maxEvalsSEXP);
     Rcpp::traits::input_parameter< double >::type xtol(xtolSEXP);
     Rcpp::traits::input_parameter< double >::type ftol(ftolSEXP);
-    __result = Rcpp::wrap(cmaesOptim(x0, sigma, optimFun, optimFunBlock, lowerB, upperB, cmaAlgo, lambda, maxEvals, xtol, ftol));
+    Rcpp::traits::input_parameter< int >::type traceFreq(traceFreqSEXP);
+    __result = Rcpp::wrap(cmaesOptim(x0, sigma, optimFun, optimFunBlock, lowerB, upperB, cmaAlgo, lambda, maxEvals, xtol, ftol, traceFreq));
     return __result;
 END_RCPP
 }

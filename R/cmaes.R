@@ -11,8 +11,8 @@ cmaes <- function(x0, optimFun, lowerB, upperB, params=cmaEsParams(), cl=NULL) {
   
   # set default value for sigma
   if (is.null(params$sigma)) {
-    sigma <- median(upperB-lowerB) / 4
-  }
+    params$sigma <- median(upperB-lowerB) / 4
+  } 
   
   optimFunBlock <- function(x) {
     if (is.null(cl))
@@ -20,5 +20,5 @@ cmaes <- function(x0, optimFun, lowerB, upperB, params=cmaEsParams(), cl=NULL) {
     else
       return(parallel::parApply(cl,x,2,optimFun))
   }
-  Rlibcmaes::cmaesOptim(x0, sigma, optimFun, optimFunBlock,lowerB, upperB, cmaAlgo = as.integer(params$cmaAlgorithm), lambda = ifelse(is.null(params$lambda),-1,params$lambda), maxEvals = params$maxEvals, xtol=params$xtol, ftol=params$ftol)
+  Rlibcmaes::cmaesOptim(x0, params$sigma, optimFun, optimFunBlock,lowerB, upperB, cmaAlgo = as.integer(params$cmaAlgorithm), lambda = ifelse(is.null(params$lambda),-1,params$lambda), maxEvals = params$maxEvals, xtol=params$xtol, ftol=params$ftol, traceFreq =params$trace)
 }
