@@ -15,7 +15,7 @@ ProgressFunc<CMAParameters<GenoPheno<pwqBoundStrategy>>,CMASolutions> progress_f
 };
 
 // [[Rcpp::export]] 
-NumericVector cmaesOptim(const NumericVector x0, double sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB, int cmaAlgo, int lambda = -1, int maxEvals=1e3, double xtol=1e-12, double ftol=1e-12, int traceFreq=1) 
+NumericVector cmaesOptim(const NumericVector x0, double sigma, Function optimFun, Function optimFunBlock, NumericVector lowerB, NumericVector upperB, int cmaAlgo, int lambda = -1, int maxEvals=1e3, double xtol=1e-12, double ftol=1e-12, int traceFreq=1, int seed=0) 
 { 
   libcmaes::FitFunc cigtab = [&](const double *x, const int N) 
   { 
@@ -42,7 +42,7 @@ NumericVector cmaesOptim(const NumericVector x0, double sigma, Function optimFun
 
   GenoPheno<pwqBoundStrategy> gp(lowerB.begin(),upperB.begin(),dim);
 
-  CMAParameters<GenoPheno<pwqBoundStrategy>> cmaparams(dim,&x0_stl.front(),sigma,lambda,0,gp,cigtabBlock); 
+  CMAParameters<GenoPheno<pwqBoundStrategy>> cmaparams(dim,&x0_stl.front(),sigma,lambda,seed,gp,cigtabBlock); 
 
   // set additional parameters
   cmaparams.set_max_fevals(maxEvals);

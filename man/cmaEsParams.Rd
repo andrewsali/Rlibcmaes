@@ -6,7 +6,7 @@
 \usage{
 cmaEsParams(cmaAlgorithm = cmaEsAlgo()$CMAES_DEFAULT, sigma = NULL,
   xtol = 1e-12, ftol = 1e-12, lambda = NULL, maxEvals = 10000L,
-  trace = 1)
+  trace = 100, seed = 0)
 }
 \arguments{
 \item{cmaAlgorithm}{Specifies the type of CMA search. See the source of \code{\link{cmaEsAlgo}} for possible options.}
@@ -20,6 +20,10 @@ cmaEsParams(cmaAlgorithm = cmaEsAlgo()$CMAES_DEFAULT, sigma = NULL,
 \item{lambda}{Initial population size. Increase from default values if more 'global' solution is wanted. Note some strategies automatically do this (IPOP)}
 
 \item{maxEvals}{Maximum number of function evaluations}
+
+\item{trace}{Every trace iteration will be printed}
+
+\item{seed}{The seed of the random number generation for reproducibility. If set to 0, then a random seed is chosen (based on current time).}
 }
 \description{
 Set parameters of CMA-ES optimization
