@@ -14,12 +14,14 @@ Default parameter values are given in: https://github.com/andrewsali/Rlibcmaes/b
 
 The libcmaes library requires C++11, therefore currently the package only works under UNIX variants. This will change with R 3.3., which is going to use gcc 4.9+. The package has been tested under experimental Windows builds, so it is highly likely that it will be available for Windows platforms in the near future.
 
-To install the package, use the devtools package and then execute: 
+To install the package, clone the git repository to a folder and then execute R CMD INSTALL (for example): 
 
 ```
-library(devtools)
-install_github("andrewsali/Rlibcmaes",quick=TRUE,dependencies=TRUE)
+git clone --recursive https://github.com/andrewsali/Rlibcmaes.git /tmp/Rlibcmaes
+cd /tmp
+R CMD INSTALL --preclean Rlibcmaes
 ```
+Unfortunately install_github from the devtools package does not support submodules at this point (recursive cloning), therefore one needs to manually clone the repository and install.
 
 # Example / Testing
 A quick-test of the package can be run by executing the contents of https://github.com/andrewsali/Rlibcmaes/blob/master/tests/testthat/quadratic_test.R
