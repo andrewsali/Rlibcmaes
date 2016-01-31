@@ -27,7 +27,7 @@ Unfortunately install_github from the devtools package does not support submodul
 A quick-test of the package can be run by executing the contents of https://github.com/andrewsali/Rlibcmaes/blob/master/tests/testthat/quadratic_test.R
 
 # Modifications to libcmaes
-For the set of modifications applied to libcmaes src, see: https://github.com/andrewsali/Rlibcmaes/blob/master/Rlibcmaes.patch
+For the set of modifications applied to libcmaes src, see the fork of the libcmaes library that the src/ folder is based on: https://github.com/andrewsali/libcmaes
 
 # Authors
 The R wrapper has been created by Andras Sali. All credit for the underlying library goes to libcmaes developers. 
