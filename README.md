@@ -17,9 +17,9 @@ The libcmaes library requires C++11, therefore currently the package only works 
 To install the package, clone the git repository to a folder and then execute R CMD INSTALL (for example): 
 
 ```
-$ git clone --recursive https://github.com/andrewsali/Rlibcmaes.git /tmp/Rlibcmaes
-$ cd /tmp
-$ R CMD INSTALL --preclean Rlibcmaes
+git clone --recursive https://github.com/andrewsali/Rlibcmaes.git /tmp/Rlibcmaes
+cd /tmp
+R CMD INSTALL --preclean Rlibcmaes
 ```
 Unfortunately install_github from the devtools package does not support submodules at this point (recursive cloning), therefore one needs to manually clone the repository and install.
 
