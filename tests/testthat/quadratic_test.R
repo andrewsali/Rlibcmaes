@@ -1,3 +1,4 @@
+library(Rlibcmaes)
 # A simple test of the cmaesOptim function
 f <- function(x) {
   Sys.sleep(.1)
