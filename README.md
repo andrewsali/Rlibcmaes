@@ -14,7 +14,7 @@ Default parameter values are given in: https://github.com/andrewsali/Rlibcmaes/b
 
 The libcmaes library requires C++11, therefore currently the package only works under UNIX variants. This will change with R 3.3., which is going to use gcc 4.9+. The package has been tested under experimental Windows builds, so it is highly likely that it will be available for Windows platforms in the near future.
 
-To install the package, clone the git repository to a folder and then execute R CMD INSTALL (for example): 
+As a first step make sure RcppEigen package is installed. Then to install the package, clone the git repository to a folder and then execute R CMD INSTALL (for example): 
 
 ```
 git clone --recursive https://github.com/andrewsali/Rlibcmaes.git /tmp/Rlibcmaes
@@ -27,7 +27,7 @@ Unfortunately install_github from the devtools package does not support submodul
 A quick-test of the package can be run by executing the contents of https://github.com/andrewsali/Rlibcmaes/blob/master/tests/testthat/quadratic_test.R
 
 # Modifications to libcmaes
-For the set of modifications applied to libcmaes src, see: https://github.com/andrewsali/Rlibcmaes/blob/master/Rlibcmaes.patch
+For the set of modifications applied to libcmaes src, see the fork of the libcmaes library that the src/ folder is based on: https://github.com/andrewsali/libcmaes/tree/RLibDiff
 
 # Authors
 The R wrapper has been created by Andras Sali. All credit for the underlying library goes to libcmaes developers. 

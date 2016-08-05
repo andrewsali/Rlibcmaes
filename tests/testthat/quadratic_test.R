@@ -1,3 +1,4 @@
+library(Rlibcmaes)
 # A simple test of the cmaesOptim function
 x_true <- c(.3,.5)
 lB <- c(0.35,0)
