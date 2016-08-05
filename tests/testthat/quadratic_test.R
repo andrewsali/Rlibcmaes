@@ -9,7 +9,7 @@ f <- function(x) {
   return(crossprod(x-x_true)[1])
 }
 
-single.time <- system.time(test.optim <- cmaes(x0=c(.4,.6),optimFun=f,lowerB=lB,upperB=uB,params=cmaEsParams(xtol=1e-3,ftol=1e-3)))
+single.time <- system.time(test.optim <- cmaes(x0=c(.4,.6),optimFun=f,lower=lB,upper=uB,params=cmaEsParams(xtol=1e-3,ftol=1e-3)))
 print(single.time)
 
 # now do parallel run
@@ -17,11 +17,11 @@ print(single.time)
 cl <- parallel::makeCluster(4)
 parallel::clusterExport(cl,c("x_true","lB","uB"))
 
-parallel.time <- system.time(test.optim.parallel <- cmaes(x0=c(.4,.6),optimFun=f,lowerB=lB,upperB=uB,params=cmaEsParams(xtol=1e-3,ftol=1e-3),cl=cl))
+parallel.time <- system.time(test.optim.parallel <- cmaes(x0=c(.4,.6),optimFun=f,lower=lB,upper=uB,params=cmaEsParams(xtol=1e-3,ftol=1e-3),cl=cl))
 
 print(parallel.time)
 
-ipop.time <- system.time(test.optim <- cmaes(x0=c(.4,.6),optimFun=f,lowerB=lB,upperB=uB,params=cmaEsParams(cmaAlgorithm = cmaEsAlgo()$IPOP_CMAES,maxEvals=1e3),cl=cl))
+ipop.time <- system.time(test.optim <- cmaes(x0=c(.4,.6),optimFun=f,lower=lB,upper=uB,params=cmaEsParams(cmaAlgorithm = cmaEsAlgo()$IPOP_CMAES,maxEvals=1e3),cl=cl))
 print(ipop.time)
 
 parallel::stopCluster(cl)

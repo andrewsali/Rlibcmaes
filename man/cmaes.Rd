@@ -4,16 +4,16 @@
 \alias{cmaes}
 \title{Wrapper for the libcmaes library to run state-of-the art local / global optimization using CMA-ES variants. See \href{https://github.com/beniz/libcmaes/}{libcmaes} and \href{https://www.lri.fr/~hansen/cmaesintro.html}{CMA-ES webpage} for further details.}
 \usage{
-cmaes(x0, optimFun, lowerB, upperB, params = cmaEsParams(), cl = NULL)
+cmaes(x0, optimFun, lower, upper, params = cmaEsParams(), cl = NULL)
 }
 \arguments{
 \item{x0}{Initial guess  for parameters (mean)}
 
 \item{optimFun}{R function to be minimized}
 
-\item{lowerB}{Lower bounds for parameters}
+\item{lower}{Lower bounds for parameters}
 
-\item{upperB}{Upper bounds for parameters}
+\item{upper}{Upper bounds for parameters}
 
 \item{params}{The CMA-ES parameters, can be set with \code{\link{cmaEsParams}}}
 
