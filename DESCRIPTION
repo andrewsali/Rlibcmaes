@@ -1,15 +1,15 @@
 Package: Rlibcmaes
 Type: Package
-Title: What the package does (short line)
-Version: 1.0
-Date: 2015-12-31
-Author: Your Name
-Maintainer: Your Name <your@email.com>
-Description: More about what it does (maybe more than one line)
-License: LGPL 3
+Title: An R Wrapper to the State-of-the-Art Libcmaes C++ Library
+Version: 0.9
+Date: 2016-08-05
+Author: Andras Sali
+Maintainer: Andras Sali <andras.sali@alphacruncher.com>
+Description: Provides a lightweight wrapper to the libcmaes C++ library.
+License: LGPL-3
 Imports: 
-    parallel,
-    Rcpp (>= 0.12.2)
-LinkingTo: Rcpp, RcppEigen
+    parallel
+Depends:	R (>= 3.1.2)
+LinkingTo: Rcpp (>= 0.12.2), RcppEigen
 RoxygenNote: 5.0.1
 Suggests: testthat

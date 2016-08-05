@@ -5,6 +5,7 @@
 #' @param upperB Upper bounds for parameters
 #' @param params The CMA-ES parameters, can be set with \code{\link{cmaEsParams}}
 #' @param cl A cluster that can be used for parallel evaluation (use only if objective function is costly!)
+#' @useDynLib Rlibcmaes
 #' @export
 cmaes <- function(x0, optimFun, lowerB, upperB, params=cmaEsParams(), cl=NULL) {
   stopifnot(all(upperB > lowerB))
