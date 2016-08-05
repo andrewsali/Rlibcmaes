@@ -4,9 +4,24 @@
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
 
-There was 1 NOTE:
+There was 3 NOTES:
 
-* checking dependencies in R code ... NOTE
-  Namespace in Imports field not imported from: 'R6'
+* checking CRAN incoming feasibility ... NOTE
+	Maintainer: ‘Andras Sali <andras.sali@alphacruncher.com>’
+	New submission
 
-  R6 is a build-time dependency.
+* checking installed package size ... NOTE
+  	installed size is 93.6Mb
+  	sub-directories of 1Mb or more:
+    	libs  93.4Mb
+
+* checking compiled code ... NOTE
+	File ‘Rlibcmaes/libs/Rlibcmaes.so’:
+  	Found ‘rand’, possibly from ‘rand’ (C)
+    	Object: ‘cmasolutions.o’
+
+	Compiled code should not call entry points which might terminate R nor
+	write to stdout/stderr instead of to the console, nor the system RNG.
+
+This is due to the libcmaes using the Random() method from the Eigen library (referenced from RcppEigen)
+
