@@ -8,7 +8,8 @@ Maintainer: Andras Sali <andras.sali@alphacruncher.com>
 Description: Provides a lightweight wrapper to the libcmaes C++ library.
 License: LGPL-3
 Imports: 
-    parallel
+    parallel,
+    stats
 Depends:	R (>= 3.1.2)
 LinkingTo: Rcpp (>= 0.12.2), RcppEigen
 RoxygenNote: 5.0.1

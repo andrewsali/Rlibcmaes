@@ -12,7 +12,7 @@ cmaes <- function(x0, optimFun, lower, upper, params=cmaEsParams(), cl=NULL) {
   
   # set default value for sigma
   if (is.null(params$sigma)) {
-    params$sigma <- median(upper-lower) / 4
+    params$sigma <- stats::median(upper-lower) / 4
   } 
   
   optimFunBlock <- function(x) {
