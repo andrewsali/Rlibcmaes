@@ -31,7 +31,7 @@ cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=
       fun_vec <- parallel::parApply(cl,x,2,optimFun)
     }
     
-    penalty_offset <- (penaltySchedule(iteration_num-1)-penaltySchedule(iteration_num)) * median(penalty_vec)
+    penalty_offset <- (penaltySchedule(iteration_num-1)-penaltySchedule(iteration_num)) * median(penalty_vec) - 1e-16
 
     fun_vec + penalty_vec * penaltySchedule(iteration_num) + penalty_offset
   }
