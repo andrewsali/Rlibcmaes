@@ -33,7 +33,7 @@ cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=
     
     penalty_offset <- (penaltySchedule(iteration_num-1)-penaltySchedule(iteration_num)) * median(penalty_vec)
 
-    fun_vec + penalty_vec + penalty_offset
+    fun_vec + penalty_vec * penaltySchedule(iteration_num) + penalty_offset
   }
   Rlibcmaes::cmaesOptim(x0, params$sigma, optimFun, optimFunBlock,lower, upper, cmaAlgo = as.integer(params$cmaAlgorithm), lambda = ifelse(is.null(params$lambda),-1,params$lambda), maxEvals = params$maxEvals, xtol=params$xtol, ftol=params$ftol, traceFreq =params$trace, seed = params$seed, quietRun=params$quiet)
 }
