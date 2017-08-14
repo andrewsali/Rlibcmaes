@@ -9,4 +9,3 @@ cmaEsAlgo()
 \description{
 Map algorithms to libcmaes constants
 }
-

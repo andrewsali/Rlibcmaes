@@ -4,12 +4,15 @@
 \alias{cmaes}
 \title{Wrapper for the libcmaes library to run state-of-the art local / global optimization using CMA-ES variants. See \href{https://github.com/beniz/libcmaes/}{libcmaes} and \href{https://www.lri.fr/~hansen/cmaesintro.html}{CMA-ES webpage} for further details.}
 \usage{
-cmaes(x0, optimFun, lower, upper, params = cmaEsParams(), cl = NULL)
+cmaes(x0, optimFun, ineqFun, lower, upper, params = cmaEsParams(),
+  cl = NULL)
 }
 \arguments{
 \item{x0}{Initial guess  for parameters (mean)}
 
 \item{optimFun}{R function to be minimized}
+
+\item{ineqFun}{An R function that specifies the inequality constraint}
 
 \item{lower}{Lower bounds for parameters}
 
@@ -18,8 +21,9 @@ cmaes(x0, optimFun, lower, upper, params = cmaEsParams(), cl = NULL)
 \item{params}{The CMA-ES parameters, can be set with \code{\link{cmaEsParams}}}
 
 \item{cl}{A cluster that can be used for parallel evaluation (use only if objective function is costly!)}
+
+\item{penaltySchedule}{A function that takes the iteration number as its parameter and returns a penalty coefficient}
 }
 \description{
 Wrapper for the libcmaes library to run state-of-the art local / global optimization using CMA-ES variants. See \href{https://github.com/beniz/libcmaes/}{libcmaes} and \href{https://www.lri.fr/~hansen/cmaesintro.html}{CMA-ES webpage} for further details.
 }
-

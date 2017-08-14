@@ -40,4 +40,3 @@ cmaesOptim(x0, sigma, optimFun, optimFunBlock, lowerB, upperB, cmaAlgo,
 \description{
 Rcpp function that calls the libcmaes library
 }
-

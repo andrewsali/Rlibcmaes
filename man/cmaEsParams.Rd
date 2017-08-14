@@ -30,4 +30,3 @@ cmaEsParams(cmaAlgorithm = cmaEsAlgo()$CMAES_DEFAULT, sigma = NULL,
 \description{
 Set parameters of CMA-ES optimization
 }
-
