@@ -9,7 +9,7 @@
 #' @param penaltySchedule A function that takes the iteration number as its parameter and returns a penalty coefficient
 #' @useDynLib Rlibcmaes
 #' @export
-cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=NULL,penaltySchedule = function(n_iter) {0}) {
+cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=NULL) {
   stopifnot(all(upper > lower))
   
   # set default value for sigma
@@ -18,22 +18,23 @@ cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=
   } 
   
   # the previous_population
-  iteration_num <- 0
+  penalty_level <- 1
   
   optimFunBlock <- function(x) {
-    iteration_num <<- iteration_num+1
-
     if (is.null(cl)) {
-      penalty_vec <- apply(x,2,ineqFun)
+      penalty_vec <- apply(x,2,ineqFun) * penalty_level
       fun_vec <- apply(x,2,optimFun) 
     }  else {
-      penalty_vec <- parallel::parApply(cl,x,2,ineqFun) 
+      penalty_vec <- parallel::parApply(cl,x,2,ineqFun) * penalty_level 
       fun_vec <- parallel::parApply(cl,x,2,optimFun)
     }
-    
-    penalty_offset <- (penaltySchedule(iteration_num-1)-penaltySchedule(iteration_num)) * median(penalty_vec) - 1e-10
 
-    fun_vec + penalty_vec * penaltySchedule(iteration_num) + penalty_offset
+    if (penalty_vec[which.min(penalty_vec + fun_vec)] > 0) {
+      penalty_level <<- penalty_level * 1.1
+    } else {
+      penalty_level <<- penalty_level * .9
+    }
+    fun_vec + penalty_vec
   }
   Rlibcmaes::cmaesOptim(x0, params$sigma, optimFun, optimFunBlock,lower, upper, cmaAlgo = as.integer(params$cmaAlgorithm), lambda = ifelse(is.null(params$lambda),-1,params$lambda), maxEvals = params$maxEvals, xtol=params$xtol, ftol=params$ftol, traceFreq =params$trace, seed = params$seed, quietRun=params$quiet)
 }
