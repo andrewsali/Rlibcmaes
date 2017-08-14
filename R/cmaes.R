@@ -7,7 +7,7 @@
 #' @param params The CMA-ES parameters, can be set with \code{\link{cmaEsParams}}
 #' @param cl A cluster that can be used for parallel evaluation (use only if objective function is costly!)
 #' @param penaltySchedule A function that takes the iteration number as its parameter and returns a penalty coefficient
-#' @useDynLib Rlibcmaes
+#' @useDynLib Rlibcmaes, .registration = TRUE
 #' @export
 cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=NULL) {
   stopifnot(all(upper > lower))
