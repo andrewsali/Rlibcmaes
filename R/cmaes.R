@@ -37,9 +37,9 @@ cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=
     }
 
     if (penalty_vec[which.min(penalty_vec + fun_vec)] > 0) {
-      penalty_level <<- penalty_level * 1.0001
+      penalty_level <<- penalty_level * 1.001
     } else {
-      penalty_level <<- penalty_level * .9999
+      penalty_level <<- penalty_level * .999
     }
     
     avg_penalty_level <<- n_iter/(n_iter+1) * avg_penalty_level + penalty_level / (n_iter+1)
