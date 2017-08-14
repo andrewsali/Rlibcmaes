@@ -23,6 +23,10 @@ cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=
   n_iter <- 1
   
   optimFunBlock <- function(x) {
+    if (n_iter %% 10==0) {
+      print(sprintf("Avg-penalty level:%s",avg_penalty_level))
+    }
+    
     n_iter <<- n_iter+1
     if (is.null(cl)) {
       penalty_vec <- apply(x,2,ineqFun) * avg_penalty_level
