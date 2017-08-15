@@ -21,9 +21,9 @@ cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=
   penalty_level <- rep(1,length(ineqFun))
 
   if (is.null(cl)) {
-    apply_rows <- function(x,f) apply(x,2,f)
+    apply_cols <- function(x,f) apply(x,2,f)
   } else {
-    apply_rows <- function(x,f) parallel::parApply(cl,x,2,f)
+    apply_cols <- function(x,f) parallel::parApply(cl,x,2,f)
   }
   
   n_iter <- 0
@@ -31,12 +31,12 @@ cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=
   optimFunBlock <- function(x) {
     n_iter <<- n_iter + 1
     
-    fun_vec <- apply_rows(x,optimFun) 
+    fun_vec <- apply_cols(x,optimFun) 
     
-    penalty_mat <- matrix(0,length(ineqFun),nrow(x))
+    penalty_mat <- matrix(0,length(ineqFun),ncol(x))
     
     for (i in 1:length(ineqFun)) {
-      penalty_mat[i,] <- apply_rows(x,ineqFun[[i]]) * penalty_level[i]
+      penalty_mat[i,] <- apply_cols(x,ineqFun[[i]]) * penalty_level[i]
     }
     
     if (n_iter %% 10==0) {
