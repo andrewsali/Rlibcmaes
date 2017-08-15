@@ -43,7 +43,7 @@ cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=
       print(sprintf("Penalty level:%s",paste(penalty_level,collapse=",")))
     }
     
-    optimal_element <- which.min(colSums(outer(rep(1,length(ineqFun)),fun_vec)+penalty_mat))
+    optimal_element <- which.min(colSums(outer(rep(1/length(ineqFun),length(ineqFun)),fun_vec)+penalty_mat))
     
     for (i in 1:length(ineqFun)) {
       if (penalty_mat[i,optimal_element]>0) {
