@@ -36,7 +36,7 @@ cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=
     penalty_mat <- matrix(0,length(ineqFun),nrow(x))
     
     for (i in 1:length(ineqFun)) {
-      penalty_mat[i,] <- apply_rows(x,ineqFun) * penalty_level[i]
+      penalty_mat[i,] <- apply_rows(x,ineqFun[[i]]) * penalty_level[i]
     }
     
     if (n_iter %% 10==0) {
