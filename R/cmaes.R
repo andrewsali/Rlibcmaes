@@ -19,31 +19,28 @@ cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=
   
   # the previous_population
   penalty_level <- 1
-  avg_penalty_level <- penalty_level
   n_iter <- 1
   
   optimFunBlock <- function(x) {
     if (n_iter %% 10==0) {
-      print(sprintf("Avg-penalty level:%s",avg_penalty_level))
+      print(sprintf("Penalty level:%s",penalty_level))
     }
     
     n_iter <<- n_iter+1
     if (is.null(cl)) {
-      penalty_vec <- apply(x,2,ineqFun) * avg_penalty_level
+      penalty_vec <- apply(x,2,ineqFun) * penalty_level
       fun_vec <- apply(x,2,optimFun) 
     }  else {
-      penalty_vec <- parallel::parApply(cl,x,2,ineqFun) * avg_penalty_level 
+      penalty_vec <- parallel::parApply(cl,x,2,ineqFun) * penalty_level 
       fun_vec <- parallel::parApply(cl,x,2,optimFun)
     }
 
     if (penalty_vec[which.min(penalty_vec + fun_vec)] > 0) {
       penalty_level <<- penalty_level * 1.01
     } else {
-      penalty_level <<- penalty_level * .99
+      penalty_level <<- penalty_level / 1.01
     }
-    
-    avg_penalty_level <<- n_iter/(n_iter+1) * avg_penalty_level + penalty_level / (n_iter+1)
-    
+
     fun_vec + penalty_vec
   }
   Rlibcmaes::cmaesOptim(x0, params$sigma, optimFun, optimFunBlock,lower, upper, cmaAlgo = as.integer(params$cmaAlgorithm), lambda = ifelse(is.null(params$lambda),-1,params$lambda), maxEvals = params$maxEvals, xtol=params$xtol, ftol=params$ftol, traceFreq =params$trace, seed = params$seed, quietRun=params$quiet)
