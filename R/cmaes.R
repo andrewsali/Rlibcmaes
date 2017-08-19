@@ -49,7 +49,7 @@ cmaes <- function(x0, optimFun, ineqFun, lower, upper, params=cmaEsParams(), cl=
       if (penalty_mat[i,optimal_element]>0) {
         penalty_level[i] <<- penalty_level[i] * 1.01
       } else {
-        penalty_level[i] <<- penalty_level[i] / 1.01
+        penalty_level[i] <<- max(1e-6,penalty_level[i] / 1.01)
       }
     }
   
